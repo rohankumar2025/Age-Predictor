@@ -9,7 +9,6 @@ import SwiftUI
 import Alamofire
 import SwiftyJSON
 
-// comment
 let UIPink = Color.init(red: 1, green: 0.2, blue: 0.56)
 
 struct ContentView: View {
