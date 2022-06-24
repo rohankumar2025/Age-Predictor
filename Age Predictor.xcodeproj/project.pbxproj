@@ -11,6 +11,9 @@
 		4F5FE87C2864F0410034E68A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5FE87B2864F0410034E68A /* ContentView.swift */; };
 		4F5FE87E2864F0420034E68A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4F5FE87D2864F0420034E68A /* Assets.xcassets */; };
 		4F5FE8812864F0420034E68A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4F5FE8802864F0420034E68A /* Preview Assets.xcassets */; };
+		4F5FE8892864FDA50034E68A /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 4F5FE8882864FDA50034E68A /* SwiftyJSON */; };
+		4F5FE88C2864FDB20034E68A /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 4F5FE88B2864FDB20034E68A /* Alamofire */; };
+		4F5FE8902865124E0034E68A /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5FE88F2865124E0034E68A /* HeaderView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +22,7 @@
 		4F5FE87B2864F0410034E68A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		4F5FE87D2864F0420034E68A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4F5FE8802864F0420034E68A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		4F5FE88F2865124E0034E68A /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -26,6 +30,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F5FE8892864FDA50034E68A /* SwiftyJSON in Frameworks */,
+				4F5FE88C2864FDB20034E68A /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -54,6 +60,7 @@
 				4F5FE8792864F0410034E68A /* Age_PredictorApp.swift */,
 				4F5FE87B2864F0410034E68A /* ContentView.swift */,
 				4F5FE87D2864F0420034E68A /* Assets.xcassets */,
+				4F5FE88F2865124E0034E68A /* HeaderView.swift */,
 				4F5FE87F2864F0420034E68A /* Preview Content */,
 			);
 			path = "Age Predictor";
@@ -83,6 +90,10 @@
 			dependencies = (
 			);
 			name = "Age Predictor";
+			packageProductDependencies = (
+				4F5FE8882864FDA50034E68A /* SwiftyJSON */,
+				4F5FE88B2864FDB20034E68A /* Alamofire */,
+			);
 			productName = "Age Predictor";
 			productReference = 4F5FE8762864F0410034E68A /* Age Predictor.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +122,10 @@
 				Base,
 			);
 			mainGroup = 4F5FE86D2864F0410034E68A;
+			packageReferences = (
+				4F5FE8872864FDA40034E68A /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
+				4F5FE88A2864FDB20034E68A /* XCRemoteSwiftPackageReference "Alamofire" */,
+			);
 			productRefGroup = 4F5FE8772864F0410034E68A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -138,6 +153,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4F5FE87C2864F0410034E68A /* ContentView.swift in Sources */,
+				4F5FE8902865124E0034E68A /* HeaderView.swift in Sources */,
 				4F5FE87A2864F0410034E68A /* Age_PredictorApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -339,6 +355,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4F5FE8872864FDA40034E68A /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftyJSON/SwiftyJSON";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		4F5FE88A2864FDB20034E68A /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4F5FE8882864FDA50034E68A /* SwiftyJSON */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F5FE8872864FDA40034E68A /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
+			productName = SwiftyJSON;
+		};
+		4F5FE88B2864FDB20034E68A /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F5FE88A2864FDB20034E68A /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4F5FE86E2864F0410034E68A /* Project object */;
 }
