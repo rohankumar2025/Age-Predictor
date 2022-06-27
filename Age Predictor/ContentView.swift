@@ -38,7 +38,6 @@ struct ContentView: View {
                     
                     if let i = inputImage { // IMAGE
                         Image(uiImage: i).resizable()
-                        //.border(UIPink, width: 10)
                             .cornerRadius(25)
                             .shadow(color: .black, radius: 5)
                             .aspectRatio(contentMode: .fit)
@@ -67,27 +66,33 @@ struct ContentView: View {
     }
     
     func processImage() {
-        self.showingImagePicker = false
-        self.predictedAgeGroup="..."
-        guard let inputImage = inputImage else {return}
-        print("Processing image due to Button press")
-        let imageJPG=inputImage.jpegData(compressionQuality: 0.0034)!
+        self.showingImagePicker = false // Removes Camera Roll Image picker from UI
+        self.predictedAgeGroup="..." // Temporary Message while AI is loading
+        guard let inputImage = inputImage else {return} // Unwraps inputImage
+
+        self.predictedAgeGroup = sendImageToAI(image: inputImage)
+        }
+    }
+    
+    func sendImageToAI(image: UIImage) -> String {
+        // Compresses and Converts image to correct output type
+        let imageJPG=image.jpegData(compressionQuality: 0.0034)!
         let imageB64 = Data(imageJPG).base64EncodedData()
+        // Sends image to AI URL
         let uploadURL="https://askai.aiclub.world/018cb7b9-ad1c-4c60-84a1-267fac249865"
-        
         AF.upload(imageB64, to: uploadURL).responseJSON { response in
-            
+            // Receives output from AI
             debugPrint(response)
             switch response.result {
             case .success(let responseJsonStr):
-                //print("\n\n Success value and JSON: \(responseJsonStr)")
                 let myJson = JSON(responseJsonStr)
                 let predictedValue = myJson["predicted_label"].string
                 
                 let predictionMessage = predictedValue!
-                self.predictedAgeGroup = convertToAgeGroup(predictionMessage)
+                return convertToAgeGroup(predictionMessage) // returns result, which is displayed on UI
             case .failure(let error):
                 print("\n\n Request failed with error: \(error)")
+                return ""
             }
         }
     }
@@ -106,8 +111,6 @@ struct ContentView: View {
             return "Invalid Photo"
         }
     }
-
-    
     
 }
 
