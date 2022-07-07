@@ -130,8 +130,8 @@ struct ContentView: View {
         // initialize constants used for the object detection procedure
         let PYR_SCALE = 1.75 // Scale factor used in imagePyramid() function (Higher Value = faster, less accurate)
         let WIN_STEP = 25 // Size of step that the Sliding Window is taking
-        let ROI_SIZE = (200, 200) // Dimensions of Sliding Window (Should be close in size to the object/face)
-        let MIN_CONFIDENCE_SCORE = 0.90 // Threshold value for rectangle to be drawn
+        let ROI_SIZE = (175, 175) // Dimensions of Sliding Window (Should be close in size to the object/face)
+        let MIN_CONFIDENCE_SCORE = 0.88 // Threshold value for rectangle to be drawn
         let INPUT_SIZE = (image.size.width, image.size.height) // Dimensions of Original Image
 
         var arrayOut:[((Int, Int, Int, Int), Double)] = [] // Array containing [ ( (X+Y Coordinates for rectangle), Confidence_Score ) ]
@@ -175,14 +175,14 @@ struct ContentView: View {
     }
     
     func nonMaximumSuppression(_ infoArray:[((Int, Int, Int, Int), Double)]) -> [(Int, Int, Int, Int)]{
-        var arrayNoOverlaps:[ ((Int, Int, Int, Int), Double) ] = [] // Array of Arrays containing groups of overlapping rectangles
-        // Each index of arrayOut contains an array of overlapping rectangles
+        var arrayNoOverlaps:[ ((Int, Int, Int, Int), Double) ] = []
+        // Each index of arrayNoOverlaps contains a rectangle + confidenceScore tuple
         
         // Iterates through all entries in infoArray
         for ((x1,y1,x2,y2), confidenceScore) in infoArray {
             var overlapsOtherRectangle = false
             
-            // Appends current info to arrayOut if overlapsOtherRectangle remains false
+            // Appends current info to array if overlapsOtherRectangle remains false
             // Compares to overlapping rectangle if overlapsOtherRectangle is true
             // Replaces current overlapping rectangle if confidence score is greater
             // Else, leaves arrayOut as is
@@ -196,7 +196,6 @@ struct ContentView: View {
                             arrayNoOverlaps[i] = ((x1,y1,x2,y2), confidenceScore)
                         }
                         overlapsOtherRectangle = true
-                        break
                     } // END IF STATEMENT
                 } // END INNER FOR LOOP
             } // END IF STATEMENT
@@ -217,8 +216,10 @@ struct ContentView: View {
     
     // Helper function to check if Rect1 overlaps with any rectangle in rectArray
     func isOverlapping(rect1: (Int,Int,Int,Int), rect2: (Int,Int,Int,Int)) -> Bool {
+        let THRESH = 100 // Threshold added to detect overlaps
+        
         // Returns False if Rectangles are not overlapping
-        if !( (rect1.2 < rect2.2) || (rect2.2 < rect1.0) || (rect1.3 < rect2.1)     || (rect2.3 < rect1.1) ) {
+        if !( (rect1.2+THRESH < rect2.0) || (rect2.2+THRESH < rect1.0) || (rect1.3+THRESH < rect2.1) || (rect2.3+THRESH < rect1.1) ) {
             return true
         }
         return false // Returns false if no collisions are detected
