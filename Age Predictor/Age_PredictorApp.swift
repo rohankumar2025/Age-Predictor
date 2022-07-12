@@ -12,6 +12,7 @@ struct Age_PredictorApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+//            TestView()
         }
     }
 }
