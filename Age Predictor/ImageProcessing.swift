@@ -67,7 +67,7 @@ extension UIImage {
     
     /// Takes in array of rectangle coordinates, draws them on top of the image inputted, and returns the edited image
     ///- parameter arrayIn: contains coordinates for all non-overlapping rectangles
-    func drawRectanglesOnImage(_ arrayIn:[(Int, Int, Int, Int)]) -> UIImage{
+    func drawRectanglesOnImage(_ arrayIn:[(Int, Int, Int, Int)], color:UIColor = .systemRed) -> UIImage{
         var editedInputImage:UIImage = self.resizeImageTo(size: self.size)
         let imageSize = editedInputImage.size
         
@@ -76,7 +76,6 @@ extension UIImage {
             UIGraphicsBeginImageContextWithOptions(imageSize, false, scale) // Begins Drawing
             editedInputImage.draw(at: CGPoint.zero) // Sets Starting Point at (0,0)
             let rectangle = CGRect(x: x1, y: y1, width: x2-x1, height: y2-y1) // Creates Rectangle Object at the correct x and y coordinates
-            let color:UIColor = .systemPink // Sets Stroke Color
             color.set()
             
             // Draws Rectangle "Path" on top of UIImage

@@ -60,7 +60,8 @@ struct ContentView: View {
         // Processes API Call on whole image
         processAPICall(image: inputImage, {(prediction, _) in
             // Displays prediction to UI
-            self.predictedAgeGroup = convertToAgeGroup(prediction)
+            let convertToAgeGroup = ["Kid": "6-20", "Young Adult": "21-35", "Adult": "36-59", "Elderly": "60+"] // Helper Dictionary to convert AI prediction to Age Group
+            self.predictedAgeGroup = convertToAgeGroup[prediction] ?? ""
         })
         
         if globals.doObjectDetection {
@@ -85,26 +86,24 @@ struct ContentView: View {
         var prediction = ""
         var confidenceScore = 0.0
         // Pre processing before image is sent to AI
-        let imageCompressed = image.jpegData(compressionQuality: 0.17)!
+        let imageCompressed = image.jpegData(compressionQuality: 0.1)!
         let imageB64 = Data(imageCompressed).base64EncodedData()
         
         // Enters Dispatch Group before starting API Call
         apiCall.enter()
         
-        AF.upload(imageB64, to: AIURL).responseJSON { response in
+        AF.upload(imageB64, to: AIURL).responseDecodable(of: JSON.self) { response in
             switch response.result {
-            case .success(let responseJsonStr):
-                let myJson = JSON(responseJsonStr) // Converts response into JSON Format
-                if let pred = myJson["predicted_label"].string {
-                    prediction = pred // Parses response to find prediction
-                }
+            case .success(let resultJSON):
+                prediction = resultJSON["predicted_label"].string ?? ""
                 
                 // Calculates confidence score of prediction
-                let confidence = Array(myJson["score"])
-                // Sets confidenceScore to highest confidence among the categories outputted by the AI
-                for (_, c2) in confidence {
-                    if ((c2.rawValue as! Double) > confidenceScore) { confidenceScore = c2.rawValue as! Double}
-                }
+                let confidence = resultJSON["score"]
+                
+                let convertToIndex = ["Kid": 0, "Young Adult": 1, "Adult": 2, "Elderly": 3] // Helper Dictionary to convert Labels to Indexes
+                
+                guard let confidenceIndex = convertToIndex[prediction] else { return } // Unwraps Index
+                confidenceScore = confidence[confidenceIndex].rawValue as? Double ?? 0.0 // Sets confidenceScore to highest confidence among the categories outputted by the AI
             case .failure:
                 print("Failure")
             } // END SWITCH-CASE STATEMENT
@@ -140,6 +139,9 @@ struct ContentView: View {
         var arrayOut:[((Int, Int, Int, Int), Double)] = [] // Array containing [ ( (X+Y Coordinates for rectangle), Confidence_Score ) ]
         let pyramid = image.imagePyramid(scale: PYR_SCALE, minSize: (100,100))
         
+        let origImage = image
+        var imageCopy = image
+        
         let apiCall = DispatchGroup() // Creates DispatchGroup for apiCall
         
         for img in pyramid {
@@ -155,13 +157,19 @@ struct ContentView: View {
                 let w = Int(Double(ROI_SIZE.0) * scale)
                 let h = Int(Double(ROI_SIZE.1) * scale)
                 
+                
                 apiCall.enter() // Task Enters Dispatch Group before API Call Begins
                 // Sends processed image to AI
                 processAPICall(image: roiOrig, {(_, confidenceScore) in
+                    
+                    inputImage = imageCopy.drawRectanglesOnImage([(I, J, I+w, J+h)], color: .systemRed)
+                    
                     // Appends Data to arrayOut if ROI has more than minimum confidence score
                     if confidenceScore >= MIN_CONFIDENCE_SCORE {
+                        imageCopy = imageCopy.drawRectanglesOnImage([(I, J, I+w, J+h)], color: .systemOrange)
                         arrayOut.append( ((I, J, I+w, J+h), confidenceScore) )
                     }
+            
                     apiCall.leave() // Task Leaves Dispatch Group after API call is completed
                     
                 }) // END API CALL
@@ -172,8 +180,9 @@ struct ContentView: View {
         // Executes after all API calls are completed
         apiCall.notify(queue: .main, execute: {
             if arrayOut.count > 0 {
+                inputImage = origImage
                 // If at least 1 object is detected, calls drawRectangleOnImage() function
-                inputImage = inputImage!.drawRectanglesOnImage(nonMaximumSuppression(arrayOut))
+                inputImage = inputImage!.drawRectanglesOnImage(nonMaximumSuppression(arrayOut), color: .systemGreen)
                 self.isLoading = false
             } else if globals.numAttemptsToDetectObj <= 10 {
                 // If no objects are detected, program retries detectObjsInImage() function with a  lower MIN_CONFIDENCE_SCORE up to 10 more times
@@ -184,24 +193,6 @@ struct ContentView: View {
                 self.isLoading = false // Turns off loading screen when all attempts are used up
             }
         }) // END APICALL.NOTIFY BLOCK
-    }
-}
-
-
-
-/// Helper Function to convert Prediction Labels to Age Ranges which are outputted to user
-func convertToAgeGroup(_ prediction:String) -> String {
-    switch prediction {
-    case "Kid":
-        return "6-20"
-    case "Young Adult":
-        return "21-35"
-    case "Adult":
-        return "36-59"
-    case "Elderly":
-        return "60+"
-    default:
-        return "Invalid Photo"
     }
 }
 
