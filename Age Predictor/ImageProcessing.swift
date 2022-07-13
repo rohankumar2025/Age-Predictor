@@ -80,7 +80,7 @@ extension UIImage {
             
             // Draws Rectangle "Path" on top of UIImage
             let rect:UIBezierPath = UIBezierPath(rect: rectangle)
-            rect.lineWidth = imageSize.width / 250
+            rect.lineWidth = imageSize.width / 175
             rect.stroke()
             editedInputImage = UIGraphicsGetImageFromCurrentImageContext()!
             UIGraphicsEndImageContext() // Ends Drawing

@@ -132,12 +132,12 @@ struct ContentView: View {
     ///6. Calls drawRectangleOnImage() function
     func detectObjsInImage(image: UIImage, ROI_SIZE: (Int, Int) = (150, 150), MIN_CONFIDENCE_SCORE:Double = 0.93) {
         // initialize constants used for the object detection procedure
-        let PYR_SCALE = 1.15 // Scale factor used in imagePyramid() function (Higher Value = faster, less accurate)
-        let WIN_STEP = 25 // Size of step that the Sliding Window is taking
+        let PYR_SCALE = 1.25 // Scale factor used in imagePyramid() function (Higher Value = faster, less accurate)
+        let WIN_STEP = 30 // Size of step that the Sliding Window is taking
         let INPUT_SIZE = (image.size.width, image.size.height) // Dimensions of Original Image
         
         var arrayOut:[((Int, Int, Int, Int), Double)] = [] // Array containing [ ( (X+Y Coordinates for rectangle), Confidence_Score ) ]
-        let pyramid = image.imagePyramid(scale: PYR_SCALE, minSize: (100,100))
+        let pyramid = image.imagePyramid(scale: PYR_SCALE, minSize: (150.0, 150.0))
         
         let origImage = image
         var imageCopy = image
@@ -188,7 +188,7 @@ struct ContentView: View {
                 // If no objects are detected, program retries detectObjsInImage() function with a  lower MIN_CONFIDENCE_SCORE up to 10 more times
                 
                 globals.numAttemptsToDetectObj += 1
-                detectObjsInImage(image: image, ROI_SIZE: ROI_SIZE, MIN_CONFIDENCE_SCORE: MIN_CONFIDENCE_SCORE-0.01)
+                detectObjsInImage(image: image, ROI_SIZE: ROI_SIZE, MIN_CONFIDENCE_SCORE: MIN_CONFIDENCE_SCORE-0.02)
             } else {
                 self.isLoading = false // Turns off loading screen when all attempts are used up
             }
