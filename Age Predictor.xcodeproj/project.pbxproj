@@ -29,6 +29,7 @@
 		4F5FE87D2864F0420034E68A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4F5FE8802864F0420034E68A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		4F5FE88F2865124E0034E68A /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
+		4F65647B287F5EF900A6203E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +69,7 @@
 				4F4DE2FB287CF1F70014FC4D /* ViewStructs.swift */,
 				4F16881E286A419100DC3083 /* ImageProcessing.swift */,
 				4F16882D286D8DAA00DC3083 /* ImagePicker.swift */,
+				4F65647B287F5EF900A6203E /* Info.plist */,
 				4F5FE88F2865124E0034E68A /* HeaderView.swift */,
 				4F5FE87D2864F0420034E68A /* Assets.xcassets */,
 				4F5FE87F2864F0420034E68A /* Preview Content */,

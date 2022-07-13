@@ -21,7 +21,11 @@ class GlobalVars : ObservableObject {
 
 struct ContentView: View {
     @State private var predictedAgeGroup = ""
+    
+    @State private var showSheet = false
     @State private var showingImagePicker = false
+    @State private var sourceType: UIImagePickerController.SourceType = .camera
+    
     @State private var inputImage: UIImage? = UIImage(named: "default")
     @State private var loadingText = " "
     @State private var isLoading = false
@@ -35,15 +39,29 @@ struct ContentView: View {
             // All Views with Struct at the end of its name are in ViewStructs.swift
             HeaderView().environmentObject(globals) // Passes global variables to header view
             Spacer()
-            PredictionTextStruct(predictedAgeGroup: $predictedAgeGroup)
+            PredictionTextStruct(predictedAgeGroup: self.$predictedAgeGroup)
             isLoading ? LoadingCircleStruct() : nil // Shows loading Circle if isLoading == true
-            InputImageViewStruct(inputImage: $inputImage)
+            InputImageViewStruct(inputImage: self.$inputImage)
             Spacer()
-            SubmitButtonStruct(showingImagePicker: $showingImagePicker)
+            SubmitButtonStruct(showingImagePicker: self.$showSheet)
             Spacer()
-        }.sheet(isPresented: $showingImagePicker, onDismiss: processImage) {
-            // Displays ImagePicker if showingImagePicker == true
-            ImagePicker(image: self.$inputImage)
+        } // Action Sheet allowing User to select between using Camera Roll or Taking a Live photo
+        .actionSheet(isPresented: self.$showSheet) {
+            ActionSheet(title: Text("Select Photo"), buttons: [
+                .default(Text("Photo Library")) {
+                    self.showingImagePicker = true
+                    self.sourceType = .photoLibrary // Sets source type to Camera Roll
+                },
+                .default(Text("Take Photo")) {
+                    self.showingImagePicker = true
+                    // TODO: FIX CAMERA PRIVACY SETTINGS. DOES NOT WORK!!!
+                    self.sourceType = .camera // Sets source type to Camera
+                },
+                .default(Text("Dismiss")) { self.showSheet = false }
+            ] )
+        }
+        .sheet(isPresented: $showingImagePicker, onDismiss: processImage) { // Displays Image Picker with correct Source Type
+            ImagePicker(image: self.$inputImage, isShown: self.$showingImagePicker, sourceType: self.sourceType)
         }
     }
     
